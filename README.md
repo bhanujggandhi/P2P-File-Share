@@ -150,52 +150,44 @@ The SHA1 algorithm is employed to maintain data integrity within the Mini-torren
 
 ### Peer Set
 
-Each peer maintains a list of peers to whom it can reach and download the pieces. Out of all the peers in the peer set, a node can only send data to a subset and this subset of peers is called Active Peer Set.
+Each peer has a list of other peers it can connect with to download pieces of a file. However, it can only send data to a specific group of those peers, which we call the "Active Peer Set."
 
 ### Pieces
 
-The original file is split into equal size pieces and the SHA-1 of each piece is put into the .torrent file. The hash is then used by the peers to download the corresponding piece and once all the pieces are downloaded, they are merged to re-generate the file.
+The original file is divided into equal-sized parts, and a unique code (called SHA-1) is created for each part. These codes are listed in a special file called a ".torrent" file. Peers use these codes to download the corresponding parts of the file. Once they have all the parts, they put them together to make the complete file.
 
 ### Tracker
 
-Tracker is the only central entity and it holds the information about all the peers participating in the torrent network. It is a simple HTTP server that responds to the queries of the peers and stores status information coming in from the peers.
+The tracker is like a central hub for a torrent network. It keeps track of all the peers involved in sharing the file. It's basically a simple web server that answers questions from peers and stores information about their status.
 
-Each torrent file holds a Tracker URL that helps the peers locate and talk to the tracker to participate in the torrent. The tracker keeps track of
+Every torrent file has a special web address (URL) for the tracker. Peers use this address to find and talk to the tracker. The tracker keeps track of:
 
-- peers who hold the pieces of the file
-- peers who are downloading
-- peers who need help to find other peers
+- Who has parts of the file.
+- Who is currently downloading the file.
+- Who needs help finding other peers.
 
-Although the tracker keeps track of a lot of information, it does not download or participate in the download of the actual content of the file; it simply holds the meta information.
+However, the tracker doesn't actually download or participate in getting the real content of the file. It only manages the information about the file.
 
 ### Leecher
 
-Leecher is any peer in the network that is downloading the pieces and is awaiting the completion of the file. Leecher talks to the tracker to get the list of 50 peers and then talks to them to get the desired pieces.
-
-The leechers also help other leechers by sharing the pieces they have, thus quickly distributing the file across the network.
+A leecher is just a peer in the network that is downloading parts of the file and waiting for the download to finish. Leechers talk to the tracker to get a list of 50 other peers to connect with and get the parts they need. They also help other leechers by sharing the parts they've already downloaded. This helps spread the file across the network faster.
 
 ### Seeder
 
-Seeder is a peer in the network that has all the pieces of the file and does not need to download anything. So, if any leecher needs any piece that is not available with any other leecher, it can obtain from the seeder.
-
-A leecher, after completing the download of the entire file, becomes the seeder and continues to participate in the network.
+A seeder is a peer who has all the parts of the file and doesn't need to download anything. If a leecher can't find a part they need from another leecher, they can get it from a seeder. Once a leecher finishes downloading the whole file, they become a seeder and continue sharing the file with others.
 
 ### Choke Algorithm
 
-In a P2P network, every peer would want to download the file as fast as possible but this would lead to a skewed load on some peers. BitTorrent addresses this using a reciprocation algorithm called Choke.
+In a peer-to-peer network, everyone wants to download as fast as possible. But if everyone tries to download at once, it can overload some peers. BitTorrent uses an algorithm called "Choke" to make sure:
 
-The choke algorithm ensures
-
-- maximum download speed to genuine peers
-- minimal network abuse by free riders
+- Peers who share and play nice get the fastest downloads.
+- People who try to cheat the system are slowed down.
 
 ### Piece Selection Algorithm
 
-Having a piece selection strategy is important because what if every single peer starts with the first piece first, this would increase the load on the peers/seeders that have them; thus reducing the speed of distribution.
+Choosing how to download parts of the file is important. If everyone starts with the same part, it can slow things down. Also, what if the seeder leaves before everyone finishes downloading?
 
-What if before anyone could download the last few pieces, the seeder (having all the pieces) leave the network? none of the lechers would be able to complete their download.
-
-> In this project we have used, **Rarest Piece First Algorithm** in order to prioritze the pieces which are lesser available in the system.
+> In this project, we use a strategy called the "Rarest Piece First Algorithm." This means peers try to get the parts that are the hardest to find first. It helps distribute the file more efficiently.
 
 ## Resources
 
